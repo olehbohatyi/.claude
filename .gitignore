@@ -1,0 +1,28 @@
+# Claude Code ephemeral / session / cache state — never version
+backups/
+cache/
+file-history/
+history.jsonl
+ide/
+list_files.txt
+plugins/
+projects/
+session-env/
+sessions/
+shell-snapshots/
+telemetry/
+.last-cleanup
+.last-update-result.json
+
+# Personal local overrides (Claude Code auto-gitignores this too)
+settings.local.json
+.credentials.json
+
+# --- OS-specific ---
+
+# macOS
+.DS_Store
+
+# Windows
+
+# Linux
