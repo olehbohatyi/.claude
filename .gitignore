@@ -15,6 +15,7 @@ telemetry/
 .last-update-result.json
 
 # Personal local overrides (Claude Code auto-gitignores this too)
+settings.json
 settings.local.json
 .credentials.json
 
