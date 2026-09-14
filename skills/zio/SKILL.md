@@ -287,6 +287,7 @@ When reading or reviewing ZIO code, actively look for these:
 - `Throwable` as the error type of a domain service.
 - `.orDie` / `catchAll(_ => ZIO.unit)` used to make the compiler quiet.
 - Dependencies declared in the trait's environment type instead of the implementation's constructor.
+- A service implemented as a bare class/object with no trait — it can't be swapped via ZLayer or mocked in tests; split into `trait Foo` + `FooLive` per the Service Pattern.
 - `fork` without a matching `join`/`interrupt`, or `forkDaemon` used to dodge structured concurrency.
 - Two `Ref` operations that need to be atomic together.
 - Unbounded `Queue.unbounded` / `ZStream.buffer(Int.MaxValue)` where back-pressure was the point.
