@@ -1,7 +1,7 @@
 ---
 name: commit-message
 description: Write and validate git commit messages using the Conventional Commits v1.0.0 specification. Use this whenever the user asks to commit changes, write a commit message, generate a changelog, determine a semantic version bump, or mentions "conventional commits", "commit message format", or "semver commits".
-allowed-tools: Bash(git diff:*), Bash(git status:*), Bash(git log:*), Bash(git commit:*), Read
+allowed-tools: Bash(git diff:*), Bash(git status:*), Bash(git log:*), Bash(git add:*), Bash(git commit:*), Read
 model: haiku
 # ^ formulaic classify+write task, haiku is plenty. Bump to sonnet/inherit if you want richer bodies for complex diffs.
 ---
@@ -68,11 +68,13 @@ feat!: send an email to the customer when a product is shipped
 
 ## Workflow
 
-When asked to commit staged changes:
-1. Run `git diff --staged` (or `git status` if nothing is staged) to see what changed.
-2. Pick the type that matches the dominant change; split into multiple commits if concerns are mixed.
-3. Add a scope if the change is localized to one module/area.
-4. Write a short, imperative description (e.g. "add", not "added"/"adds").
-5. Add a body only if the "why" isn't obvious from the diff.
-6. Flag breaking changes with `!` and/or a `BREAKING CHANGE:` footer.
-7. Run `git commit -m "<header>" -m "<body>" -m "<footer>"` (separate `-m` flags per block), or open an editor for multi-paragraph messages.
+When asked to commit (staging first if the user says "add and commit" or nothing is staged yet):
+1. If nothing is staged, `git add` the relevant files (ask before a broad `git add -A`/`.` — never stage secrets).
+2. Run `git diff --staged` to see what changed.
+3. Check `git log -10 --format=%B` for this repo's existing convention: single-line-only messages, or header+body+footer. Match it rather than defaulting to the full template — Conventional Commits doesn't require a body or footer, and a repo that's consistently terse should stay that way unless the user asks otherwise.
+4. Pick the type that matches the dominant change; split into multiple commits if concerns are mixed.
+5. Add a scope if the change is localized to one module/area.
+6. Write a short, imperative description (e.g. "add", not "added"/"adds").
+7. Add a body only if the "why" isn't obvious from the diff AND the repo's convention (step 3) allows bodies.
+8. Flag breaking changes with `!` and/or a `BREAKING CHANGE:` footer.
+9. Run `git commit -m "<header>" -m "<body>" -m "<footer>"` (separate `-m` flags per block), or just `-m "<header>"` for a single-line commit, or open an editor for multi-paragraph messages.
