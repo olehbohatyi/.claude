@@ -19,14 +19,21 @@ val settings = ConsumerSettings(List("localhost:9092"))
 
 val consumer: ZLayer[Any, Throwable, Consumer] = ZLayer.scoped(Consumer.make(settings))
 
-val stream =
-  Consumer
+val stream = ZIO.serviceWithZIO[Consumer] { consumer =>
+  consumer
     .plainStream(Subscription.topics("orders"), Serde.string, Serde.string)
     .mapZIO(record => handle(record.value).as(record.offset))
     .aggregateAsync(Consumer.offsetBatches)
     .mapZIO(_.commit)
     .runDrain
+}
 ```
+
+**zio-kafka 3 removed the companion accessors.** `Consumer.plainStream(...)` compiled on
+2.x; on 3.x you take the service first — `ZIO.serviceWithZIO[Consumer](_.plainStream(...))`
+— or hold a `Consumer` as a constructor parameter, per the service pattern. Check the
+version in the build before copying either shape. `Consumer.offsetBatches` is a plain
+value, not an accessor, and is unchanged.
 
 This is the canonical shape: process, collect offsets, batch-commit. `aggregateAsync(Consumer.offsetBatches)` merges offsets so you commit once per batch instead of per record.
 
@@ -41,7 +48,7 @@ Add time-based commits so a slow topic still commits:
 `plainStream` flattens all partitions into one stream — simple, but processing is serialized across partitions. For parallelism **with per-partition ordering preserved**, use `partitionedStream`:
 
 ```scala
-Consumer
+ZIO.serviceWithZIO[Consumer](_
   .partitionedStream(Subscription.topics("orders"), Serde.string, Serde.string)
   .flatMapPar(Int.MaxValue) { case (topicPartition, partitionStream) =>
     partitionStream
@@ -50,6 +57,7 @@ Consumer
       .mapZIO(_.commit)
   }
   .runDrain
+)
 ```
 
 `flatMapPar(Int.MaxValue)` is correct here: the number of inner streams is bounded by the partitions assigned to this consumer. Bound the work inside each partition instead if needed.
