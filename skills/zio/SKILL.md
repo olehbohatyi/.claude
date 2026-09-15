@@ -76,6 +76,8 @@ object Main extends ZIOAppDefault {
 
 `ZIOAppDefault` supplies the default services (`Clock`, `Console`, `Random`, `System`) and a runtime. Override `bootstrap` to change the runtime configuration (logger, config provider, metrics); it runs before anything else in the app.
 
+Full treatment of bootstrap vs. run, top-level layer wiring, module layout and graceful shutdown: `references/app-structure.md`.
+
 ---
 
 ## 2. Error model — the thing people get wrong
@@ -171,7 +173,7 @@ Guarantees: layers are acquired in parallel where possible, **memoized** (a laye
 
 Missing dependency = compile error listing exactly what's absent. Trust it.
 
-Advanced (multiple instances of one type, error handling in construction, `ZEnvironment` internals): `references/dependency-injection.md`.
+Advanced (multiple instances of one type, error handling in construction, `ZEnvironment` internals): `references/dependency-injection.md`. For how the layers come together at the top of the app — provide-at-the-edge, `live`/`test` layer sets, module layout: `references/app-structure.md`.
 
 ---
 
@@ -323,10 +325,15 @@ Read the file that matches the task. Do not load them all.
 | `references/http.md` | zio-http: routes, handlers, middleware, endpoints, client, WebSockets |
 | `references/kafka.md` | zio-kafka: consumers, producers, offsets, rebalancing, transactions |
 | `references/config.md` | zio-config: descriptors, providers, HOCON/YAML, secrets, validation |
+| `references/schema-and-json.md` | zio-json, zio-schema: derivation, codecs, wire-format evolution |
+| `references/persistence.md` | zio-jdbc/Quill: pooling, transaction boundaries, idempotency, repositories |
+| `references/observability.md` | Logging, annotations, metrics, zio-telemetry tracing |
+| `references/app-structure.md` | Entry point, bootstrap, layer wiring, module layout, graceful shutdown |
+| `references/redis.md` | zio-redis: codec supplier, caching, TTLs, locks, pub/sub, embedded testing |
+| `references/cli.md` | zio-cli: commands, options, args, subcommands, help, packaging |
 
 **Not written yet.** For these, work from the core model above plus the official docs at
-`https://zio.dev/<library>`: zio-schema, zio-json, zio-logging and metrics/telemetry,
-persistence (zio-jdbc, Quill, zio-sql), zio-grpc, and interop (Java, `Future`,
-cats-effect, Pekko, Scala.js).
+`https://zio.dev/<library>`: zio-grpc, and interop (Java, `Future`, cats-effect, Pekko,
+Scala.js).
 
 **Adding a library not listed here:** follow the same shape — a new `references/<lib>.md` with dependency coordinates, the 5–10 core types, a minimal working example, integration with ZLayer, testing approach, and the library's own gotchas. Then add a row to this table.
