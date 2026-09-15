@@ -330,6 +330,7 @@ Read the file that matches the task. Do not load them all.
 | `references/observability.md` | Logging, annotations, metrics, zio-telemetry tracing |
 | `references/app-structure.md` | Entry point, bootstrap, layer wiring, module layout, graceful shutdown |
 | `references/redis.md` | zio-redis: codec supplier, caching, TTLs, locks, pub/sub, embedded testing |
+| `references/quill.md` | ProtoQuill (Scala 3 Quill): quotations, inline vs dynamic, ZIO contexts, metas |
 | `references/cli.md` | zio-cli: commands, options, args, subcommands, help, packaging |
 
 **Not written yet.** For these, work from the core model above plus the official docs at

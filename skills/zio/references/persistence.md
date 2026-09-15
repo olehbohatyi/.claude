@@ -8,7 +8,7 @@ boundaries, and repository design.
 | Library | Shape | State |
 |---|---|---|
 | **zio-jdbc** | `sql"..."` interpolator, `ZConnectionPool`, `transaction { }` | Lives under `zio-archive` and has had maintenance gaps. Fine for small services; verify it's still moving before adopting it for something long-lived. |
-| **Quill** (`zio-quill`) | Compile-time query generation from case classes | Actively used; queries checked at compile time; steep macro error messages |
+| **Quill** (`zio-quill` / ProtoQuill on Scala 3) | Compile-time query generation from case classes | Actively used; queries checked at compile time; steep macro error messages. Full treatment: `references/quill.md` |
 | **doobie** | cats-effect based | Mature and well documented, but needs `zio-interop-cats` |
 | **zio-sql** | Type-safe relational DSL | Long-running; check current status before committing |
 | **zio-blocks-sql** | Newer schema-driven SQL with `TransactorZIO` | Scala 3 / JVM only; young |
